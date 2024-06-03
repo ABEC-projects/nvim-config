@@ -12,13 +12,6 @@ vim.g.mapleader = " "
 -- Which Key
 local wk = require("which-key")
 wk.register({
-    f = {
-        name = "file", -- optional group name
-        f = { "<cmd>Telescope find_files<cr>", "Find File" }, -- create a binding with label
-        n = { "New File" }, -- just a label. don't create any mapping
-        e = "Edit File", -- same as above
-        ["1"] = "which_key_ignore",  -- special label to hide it in the popup
-    },
     z = {
         name = "Fold/unfold",
         ["["] = {"zfi[", "Fold [] square brackets"},
@@ -32,6 +25,13 @@ wk.register({
         g = {"Live grep"},
         b = {"Buffers"},
         h = {"Help tags"}
+    },
+    e = {
+        name = "Explorer",
+    },
+    o = {
+        name = "Obsidian",
+        d = {"Dailies"}
     }
 }, { prefix = "<leader>" })
 
@@ -107,9 +107,7 @@ nmap <F6> <cmd>call vimspector#StepInto()<cr>")
 -- map("n", "De", ":call vimspector#Evaluate()<cr>")
 
 -- Oil.nvim 
-require("oil").open()
 vim.keymap.set("n", "<leader>ee", function()
-  -- vim.cmd("vsplit | wincmd l")
   require("oil").open()
 end, {desc = "Open file explorer"})
 
@@ -118,20 +116,112 @@ vim.keymap.set("n", "<leader>eE", function()
   require("oil").open()
 end, {desc = "Open file explorer in new tab"})
 
-vim.keymap.set('n', '<leader>ss', "<cmd>SessionSave<CR>", {desc= "Save current session"})
-vim.keymap.set('n', '<leader>sr', "<cmd>SessionRestore<CR>", {desc= "Restore saved session"})
+-- NeoTree
+vim.keymap.set("n", "<leader>ef", function()
+    vim.cmd("Neotree")
+end, {desc="Open NeoTree"})
+
+vim.keymap.set("n", "<leader>ec", function()
+    vim.cmd("Neotree action=close")
+end, {desc="Close NeoTree"})
 
 
 local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
 vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 vim.api.nvim_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-vim.api.nvim_set_keymap("v", "<leader>ca", "<cmd>lua vim.lsp.buf.range_code_action()<CR>", opts)
-vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
--- vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
--- vim.api.nvim_set_keymap("n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-vim.api.nvim_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+opts.desc = "Code Action"
+vim.api.nvim_set_keymap("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+opts.desc = "Code Action"
+vim.api.nvim_set_keymap("v", "<leader>la", "<cmd>lua vim.lsp.buf.range_code_action()<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+opts.desc = "Signature Help"
+vim.api.nvim_set_keymap("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<CR>",opts)
+opts.desc = "Lsp Rename"
+vim.api.nvim_set_keymap("n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+opts.desc = "Lsp References"
+vim.api.nvim_set_keymap("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 -- vim.api.nvim_set_keymap("n", "<leader>f", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-vim.api.nvim_set_keymap("n", "[d", '<cmd>lua vim.diagnostic.goto_prev({ border = "single" })<CR>', opts)
-vim.api.nvim_set_keymap("n", "]d", '<cmd>lua vim.diagnostic.goto_next({ border = "single" })<CR>', opts)
+-- vim.api.nvim_set_keymap("n", "[d", '<cmd>lua vim.diagnostic.goto_prev({ border = "single" })<CR>', opts)
+-- vim.api.nvim_set_keymap("n", "]d", '<cmd>lua vim.diagnostic.goto_next({ border = "single" })<CR>', opts)
+
+-- Obsidian.nvim 
+vim.keymap.set("n", "<leader>of", function()
+    vim.cmd("ObsidianSearch")
+end,
+{desc="Search in notes"}
+)
+vim.keymap.set("n", "<leader>oo", function()
+    vim.cmd("ObsidianQuickSwitch")
+end,
+{desc="Quick Switch"}
+)
+vim.keymap.set("n", "<leader>or", function()
+    vim.ui.input({prompt = "Enter new name: "}, function (new_name)
+        if not (new_name == nil) and not (new_name == '') then
+            vim.cmd("ObsidianRename "..new_name)
+        else
+            vim.print("No input given, aborting "..new_name)
+        end
+    end)
+end,
+{desc="Rename Current"}
+)
+vim.keymap.set("n", "<leader>oR", function()
+    vim.ui.input({prompt = "Enter new name: "}, function (new_name)
+        if not (new_name == nil) and not (new_name == '') then
+            vim.cmd("ObsidianRename "..new_name.." --dry-run")
+        else
+            vim.print("No input given, aborting "..new_name)
+        end
+    end)
+end,
+{desc="Rename Dry Run"}
+)
+vim.keymap.set("n", "<leader>on", function()
+    vim.cmd("ObsidianNew")
+end,
+{desc="New Note"}
+)
+vim.keymap.set("n", "<leader>ow", function()
+    vim.cmd("ObsidianWorkspace")
+end,
+{desc="Change Workspace"}
+)
+vim.keymap.set("n", "<leader>op", function()
+    vim.cmd("ObsidianPasteImg")
+end,
+{desc="Paste Image"}
+)
+vim.keymap.set("n", "<leader>odd", function()
+    vim.cmd("ObsidianDailies")
+end,
+{desc="Select dailiy"}
+)
+vim.keymap.set("n", "<leader>odt", function()
+    vim.cmd("ObsidianToday")
+end,
+{desc="Today"}
+)
+vim.keymap.set("n", "<leader>ody", function()
+    vim.cmd("ObsidianYesterday")
+end,
+{desc="Yesterday"}
+)
+vim.keymap.set("n", "<leader>odm", function()
+    vim.cmd("ObsidianTomorrow")
+end,
+{desc="Tomorrow"}
+)
+
+-- Markdown preview
+vim.keymap.set("n", "<leader>ot", function ()
+    local cur = tostring(vim.g.mkdp_auto_start)
+    if cur == '1' then
+        vim.cmd("let g:mkdp_auto_start = 0")
+        print("Auto start disabled")
+    else
+        vim.cmd("let g:mkdp_auto_start = 1")
+        print("Auto start enabled")
+    end
+end)

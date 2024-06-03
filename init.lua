@@ -4,4 +4,5 @@ require("abec.autocmd")
 require("abec.ui")
 require("abec.options")
 require("abec.langmap")
+require("abec.filetypes")
 
