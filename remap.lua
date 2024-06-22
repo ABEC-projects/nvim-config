@@ -36,21 +36,6 @@ wk.register({
 }, { prefix = "<leader>" })
 
 
--- Hop plugin
-local hop = require('hop')
-local directions = require('hop.hint').HintDirection
-vim.keymap.set('', 'f', function()
-  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = false })
-end, {remap=true})
-vim.keymap.set('', 'F', function()
-  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = false })
-end, {remap=true})
-vim.keymap.set('', 't', function()
-  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = false, hint_offset = -1 })
-end, {remap=true})
-vim.keymap.set('', 'T', function()
-  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = false, hint_offset = 1 })
-end, {remap=true})
 
 
 -- Terminal mappings
@@ -116,14 +101,6 @@ vim.keymap.set("n", "<leader>eE", function()
   require("oil").open()
 end, {desc = "Open file explorer in new tab"})
 
--- NeoTree
-vim.keymap.set("n", "<leader>ef", function()
-    vim.cmd("Neotree")
-end, {desc="Open NeoTree"})
-
-vim.keymap.set("n", "<leader>ec", function()
-    vim.cmd("Neotree action=close")
-end, {desc="Close NeoTree"})
 
 
 local opts = { noremap = true, silent = true }
