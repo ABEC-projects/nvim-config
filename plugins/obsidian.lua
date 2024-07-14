@@ -22,6 +22,10 @@ return {
                     {
                         name = "not personal",
                         path = "~/vaults/not-personal",
+                    },
+                    {
+                        name = "anime",
+                        path = "~/vaults/anime"
                     }
                 },
                 daily_notes = {

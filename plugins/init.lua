@@ -1,47 +1,35 @@
 return {
     {"folke/neoconf.nvim", cmd = "Neoconf", opts = {}},
-    -- Rust-Tools
-    {"simrat39/rust-tools.nvim"},
-    -- Mason
     { "williamboman/mason.nvim", opts = {}},
-    -- Neodev
     {"folke/neodev.nvim", opts = {}},
-    -- Commenting
     {
-        "numToStr/Comment.nvim",
-        opts = { },
-        lazy = false
+        'mrcjkb/rustaceanvim',
+        version = '^4', -- Recommended
+        lazy = false, -- This plugin is already lazy
+        config = function ()
+            vim.cmd.aug("rust_keys")
+            vim.api.nvim_create_autocmd(
+                "BufEnter",
+                {
+                    group = "rust_keys",
+                    pattern = "*.rs",
+                    callback = function()
+                        local buf = vim.api.nvim_get_current_buf()
+                        local opts = {
+                            buffer = buf,
+                        }
+                        vim.keymap.set("n", "<leader>ra", function ()
+                            vim.cmd.RustLsp("codeAction")
+                        end, opts)
+                    end
+                }
+            )
+        end
     },
     {
-        'stevearc/oil.nvim',
-        opts = {
-            columns = {
-                "icon",
-                "mtime",
-            },
-            view_options = {show_hidden = true,},
-            keymaps = {
-                    ["g?"] = "actions.show_help",
-                    ["<CR>"] = "actions.select",
-                    ["<C-s>s"] = "actions.select_vsplit",
-                    ["<C-s>v"] = "actions.select_split",
-                    ["<C-s>t"] = "actions.select_tab",
-                    ["<C-p>"] = "actions.preview",
-                    ["<C-c>"] = "actions.close",
-                    ["<C-s>r"] = "actions.refresh",
-                    ["-"] = "actions.parent",
-                    ["_"] = "actions.open_cwd",
-                    ["`"] = "actions.cd",
-                    ["~"] = "actions.tcd",
-                    ["gs"] = "actions.change_sort",
-                    ["gx"] = "actions.open_external",
-                    ["g."] = "actions.toggle_hidden",
-                    ["g\\"] = "actions.toggle_trash",
-            },
-            use_default_keymaps = false,
-        },
-        -- Optional dependencies
-        dependencies = { "nvim-tree/nvim-web-devicons" },
+        "numToStr/Comment.nvim",
+        opts = {},
+        lazy = false
     },
     {
         dir = "~/Dev/nvim-lua/m3u_metadata/",
@@ -55,6 +43,7 @@ return {
     },
     {
         "andweeb/presence.nvim",
+        enabled = false,
         config = function ()
             require("presence").setup({
                 -- General options

@@ -40,22 +40,32 @@ wk.register({
 
 -- Terminal mappings
 map("n", "<C-t>", ":term<CR>", { noremap = true }) -- open
+vim.keymap.set("n", "<C-S-t>", function ()
+    vim.cmd.cd(vim.g.project_root)
+    vim.cmd.terminal()
+end, { noremap = true }) -- open
 map("t", "<Esc>", "<C-\\><C-n>") -- exit
-
-
--- Faster Window Travelling
-map("n", "<c-h>", "<c-w>h")
-map("n", "<c-j>", "<c-w>j")
-map("n", "<c-k>", "<c-w>k")
-map("n", "<c-l>", "<c-w>l")
 
 
 -- Telescope
 local telbuiltin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", telbuiltin.find_files, {})
-vim.keymap.set("n", "<leader>fg", telbuiltin.live_grep, {})
+-- local telescope = require("telescope")
 vim.keymap.set("n", "<leader>fb", telbuiltin.buffers, {})
 vim.keymap.set("n", "<leader>fh", telbuiltin.help_tags, {})
+vim.keymap.set("n", "<leader>ff", function ()
+    local dir = vim.g.project_root
+    if dir == nil then
+        dir = vim.cmd.pwd()
+    end
+    vim.cmd.cd(dir)
+    telbuiltin.find_files()
+end, {})
+vim.keymap.set("n", "<leader>fg", function ()
+    if  vim.g.project_root ~= "" then
+        vim.cmd.cd(vim.g.project_root)
+    end
+    telbuiltin.live_grep()
+end, {})
 
 -- Yanky Settings
 vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
@@ -66,30 +76,6 @@ vim.keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
 vim.keymap.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
 vim.keymap.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
 
--- Rust Related
-local rt = require("rust-tools")
-
-rt.setup({
-  server = {
-    on_attach = function(_, bufnr)
-      -- Hover actions
-      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-      -- Code action groups
-      vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-    end,
-  },
-})
--- Vimspector
-vim.cmd([[
-nmap <F5> <cmd>call vimspector#Launch()<cr>
-nmap <F4> <cmd>call vimspector#Reset()<cr>
-nmap <F7> <cmd>call vimspector#StepOver()<cr>")
-nmap <F8> <cmd>call vimspector#StepOut()<cr>")
-nmap <F6> <cmd>call vimspector#StepInto()<cr>")
-]])
--- map("n", "Db", ":call vimspector#ToggleBreakpoint()<cr>")
--- map("n", "Dw", ":call vimspector#AddWatch()<cr>")
--- map("n", "De", ":call vimspector#Evaluate()<cr>")
 
 -- Oil.nvim 
 vim.keymap.set("n", "<leader>ee", function()
@@ -115,7 +101,7 @@ vim.api.nvim_set_keymap("v", "<leader>la", "<cmd>lua vim.lsp.buf.range_code_acti
 opts.desc = "Signature Help"
 vim.api.nvim_set_keymap("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<CR>",opts)
 opts.desc = "Lsp Rename"
-vim.api.nvim_set_keymap("n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+vim.api.nvim_set_keymap("n", "<leader>ln", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 opts.desc = "Lsp References"
 vim.api.nvim_set_keymap("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 -- vim.api.nvim_set_keymap("n", "<leader>f", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
@@ -191,14 +177,7 @@ end,
 {desc="Tomorrow"}
 )
 
--- Markdown preview
-vim.keymap.set("n", "<leader>ot", function ()
-    local cur = tostring(vim.g.mkdp_auto_start)
-    if cur == '1' then
-        vim.cmd("let g:mkdp_auto_start = 0")
-        print("Auto start disabled")
-    else
-        vim.cmd("let g:mkdp_auto_start = 1")
-        print("Auto start enabled")
-    end
-end)
+map("n", "<A-j>", ":m .+1<CR>==") -- move line up(n)
+map("n", "<A-k>", ":m .-2<CR>==") -- move line down(n)
+map("v", "<A-j>", ":m '>+1<CR>gv=gv") -- move line up(v)
+map("v", "<A-k>", ":m '<-2<CR>gv=gv") -- move line down(v)

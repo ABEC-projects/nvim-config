@@ -16,12 +16,13 @@ set.expandtab = true
 set.tabstop = 4
 set.softtabstop = 4
 
-
 vim.wo.number = true
 vim.wo.relativenumber = true
 
 -- Required for Obsidian.nvim 
 vim.cmd("set conceallevel=2")
+
+vim.g.project_root = vim.cmd.pwd()
 
 
 -- Autocompletion 
@@ -35,7 +36,6 @@ vim.cmd("set conceallevel=2")
 -- updatetime: set updatetime for CursorHold
 vim.opt.completeopt = {'menuone', 'noselect', 'noinsert'}
 vim.opt.shortmess = vim.opt.shortmess + { c = true}
-vim.api.nvim_set_option('updatetime', 300)
 
 -- Fixed column for diagnostics to appear
 -- Show autodiagnostic popup on cursor hover_range
@@ -115,18 +115,23 @@ vim.wo.foldmethod = 'manual'
 vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
 
 
--- VImspector
-vim.cmd([[
-let g:vimspector_sidebar_width = 85
-let g:vimspector_bottombar_height = 15
-let g:vimspector_terminal_maxwidth = 70
-]])
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  pattern = "*.wgsl",
+  callback = function()
+    vim.bo.filetype = "wgsl"
+  end,
+})
 
--- Python lsp
 local lspconfig = require('lspconfig')
 lspconfig.pyright.setup{}
 lspconfig.clangd.setup{}
 lspconfig.tsserver.setup{}
 lspconfig.lua_ls.setup{}
-lspconfig.pest_language_server.setup{}
+lspconfig.wgsl_analyzer.setup{}
 
+require('mason-lspconfig').setup_handlers {
+
+    ['pest_ls'] = function ()
+        require('pest-vim').setup {}
+    end,
+}

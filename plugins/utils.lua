@@ -27,7 +27,6 @@ return {
             },
             use_default_keymaps = false,
         },
-        -- Optional dependencies
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
     {
@@ -38,5 +37,25 @@ return {
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
         ft = { "markdown" },
         build = function() vim.fn["mkdp#util#install"]() end,
-    }
+    },
+    {
+        "mfussenegger/nvim-dap",
+        config = function ()
+            local dap = require("dap")
+            dap.adapters.godot = {
+                type = "server",
+                host = "127.0.0.1",
+                port = 6006
+            }
+            dap.configurations.gdscript = {
+                {
+                    type = "godot",
+                    request = "launch",
+                    name = "Launche scene",
+                    project = "${workspaceFolder}",
+                    launch_scene = true,
+                }
+            }
+        end
+    },
 }

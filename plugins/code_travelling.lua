@@ -9,19 +9,8 @@ return {
             "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
         },
         config = function()
-            vim.keymap.set("n", "<leader>es", function()
-                local cwd = vim.fn.getcwd()
-                vim.cmd("let g:open_neotree_at='"..cwd.."'")
-            end, {desc = "Set neotree root"})
-
-            vim.keymap.set("n", "<leader>eS", function()
-                if vim.g.open_neotree_at ~= nil then
-                    vim.cmd("unlet g:open_neotree_at")
-                end
-            end, {desc = "Unset neotree root as cwd"})
-
             vim.keymap.set("n", "<leader>ef", function()
-                local dir = vim.g.open_neotree_at;
+                local dir = vim.g.project_root;
                 if dir == nil then
                     dir = vim.fn.getcwd()
                 end
@@ -44,6 +33,8 @@ return {
         init = function()
             vim.o.timeout = true
             vim.o.timeoutlen = 300
+            -- vim.api.nvim_set_option('updatetime', 300)
+            vim.opt.updatetime = 300
         end,
         opts = {
             triggers_blacklist = {
@@ -81,8 +72,8 @@ return {
 
             harpoon:setup()
 
-            vim.keymap.set('n', "<leader>a", function () harpoon:list():add() end)
-            vim.keymap.set("n", "<leader>H", function () harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+            vim.keymap.set('n', "<leader>a", function () harpoon:list():add() end, {desc = "Add harpoon mark"})
+            vim.keymap.set("n", "<C-h>", function () harpoon.ui:toggle_quick_menu(harpoon:list()) end, {desc = "Open harpoon list"})
         end
     },
 }
