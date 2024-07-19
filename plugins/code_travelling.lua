@@ -66,14 +66,62 @@ return {
     {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
-        dependencies = { "nvim-lua/plenary.nvim" },
+        dependencies = { 
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim"
+        },
         config = function ()
             local harpoon = require("harpoon")
 
-            harpoon:setup()
+            harpoon:setup({
+            --     -- Setting up custom behavior for a list named "cmd"
+            --     cmd = {
+            --
+            --         -- When you call list:add() this function is called and the return
+            --         -- value will be put in the list at the end.
+            --         --
+            --         -- which means same behavior for prepend except where in the list the
+            --         -- return value is added
+            --         --
+            --         -- @param possible_value string only passed in when you alter the ui manual
+            --         add = function(possible_value)
+            --             -- get the current line idx
+            --             local idx = vim.fn.line(".")
+            --
+            --             -- read the current line
+            --             local cmd = vim.api.nvim_buf_get_lines(0, idx - 1, idx, false)[1]
+            --             if cmd == nil then
+            --                 return nil
+            --             end
+            --
+            --             return {
+            --                 value = cmd,
+            --                 context = {vim.g.project_root},
+            --             }
+            --         end,
+            --
+            --         --- This function gets invoked with the options being passed in from
+            --         --- list:select(index, <...options...>)
+            --         --- @param list_item {value: any, context: any}
+            --         --- @param list { ... }
+            --         --- @param option any
+            --         select = function(list_item, list, option)
+            --             -- WOAH, IS THIS HTMX LEVEL XSS ATTACK??
+            --             vim.cmd(list_item.value)
+            --         end
+            --
+            --     }
+            })
 
             vim.keymap.set('n', "<leader>a", function () harpoon:list():add() end, {desc = "Add harpoon mark"})
-            vim.keymap.set("n", "<C-h>", function () harpoon.ui:toggle_quick_menu(harpoon:list()) end, {desc = "Open harpoon list"})
+            vim.keymap.set("n", "<leader>h", function () harpoon.ui:toggle_quick_menu(harpoon:list()) end, {desc = "Open harpoon list"})
+            vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end, {desc = "Open harpoon mark 1"})
+            vim.keymap.set("n", "<C-j>", function() harpoon:list():select(2) end, {desc = "Open harpoon mark 2"})
+            vim.keymap.set("n", "<C-k>", function() harpoon:list():select(3) end, {desc = "Open harpoon mark 3"})
+            vim.keymap.set("n", "<C-l>", function() harpoon:list():select(4) end, {desc = "Open harpoon mark 4"})
         end
     },
+    {
+        "nvim-treesitter/nvim-treesitter-context",
+    }
 }
