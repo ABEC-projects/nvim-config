@@ -1,10 +1,3 @@
-local function to_exact_name(value)
-    return "^" .. value .. "$"
-end
-local Path = require("plenary.path")
-local function normalize_path(buf_name, root)
-    return Path:new(buf_name):make_relative(root)
-end
 
 return {
     {
@@ -74,11 +67,19 @@ return {
     {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
-        dependencies = { 
+        dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-telescope/telescope.nvim"
         },
         config = function ()
+
+            local function to_exact_name(value)
+                return "^" .. value .. "$"
+            end
+            local Path = require("plenary.path")
+            local function normalize_path(buf_name, root)
+                return Path:new(buf_name):make_relative(root)
+            end
 
             local harpoon = require("harpoon")
 
@@ -111,12 +112,14 @@ return {
                             pos = vim.api.nvim_win_get_cursor(0)
                         end
 
+
                         return {
                             value = name,
                             context = {
                                 row = pos[1],
                                 col = pos[2],
-                                dir = vim.loop.cwd()
+                                buf_name = vim.api.nvim_buf_get_name(0),
+                                root = vim.g.project_root or vim.loop.cwd()
                             },
                         }
                     end,
@@ -128,12 +131,16 @@ return {
 
                         options = options or {}
 
+                        if vim.g.project_root == nil then
+                            vim.g.project_root = list_item.context.root
+                        end
+
                         local dir = list_item.context.dir
                         if dir == nil then
                             dir = ""
                         end
 
-                        local bufname = dir..'/'..list_item.value
+                        local bufname = list_item.context.buf_name
 
 
                         local bufnr = vim.fn.bufnr(to_exact_name(bufname))
@@ -164,16 +171,18 @@ return {
                             local row = list_item.context.row
                             local row_text =
                                 vim.api.nvim_buf_get_lines(0, row - 1, row, false)
-                            local col = #row_text[1]
 
-                            if list_item.context.col > col then
-                                list_item.context.col = col
+                            local col, err = pcall(function () return #row_text[1] end)
+                            if err == nil then
+                                if list_item.context.col > col then
+                                    list_item.context.col = col
+                                end
+
+                                vim.api.nvim_win_set_cursor(0, {
+                                    list_item.context.row or 1,
+                                    list_item.context.col or 0,
+                                })
                             end
-
-                            vim.api.nvim_win_set_cursor(0, {
-                                list_item.context.row or 1,
-                                list_item.context.col or 0,
-                            })
 
                         end
 
@@ -181,7 +190,7 @@ return {
                 }
             })
 
-            vim.keymap.set('n', "<leader>r", function () vim.g.project_root = vim.fn.getcwd() end, {desc = "Set project root"})
+            vim.keymap.set('n', "<leader>sr", function () vim.g.project_root = vim.fn.getcwd() end, {desc = "Set project root"})
             vim.keymap.set('n', "<leader>a", function () harpoon:list():add() end, {desc = "Add harpoon mark"})
             vim.keymap.set("n", "<leader>h", function () harpoon.ui:toggle_quick_menu(harpoon:list()) end, {desc = "Open harpoon list"})
             vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end, {desc = "Open harpoon mark 1"})
