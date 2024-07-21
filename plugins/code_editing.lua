@@ -39,5 +39,11 @@ return {
         end
     },
     { "tpope/vim-surround", event = "BufEnter" },
-    { "mbbill/undotree", lazy = false}
+    {
+        "mbbill/undotree",
+         lazy = false,
+         config = function ()
+             vim.keymap.set('n', '<leader>ut', ':UndotreeToggle<CR>', {desc = 'Toggle undo tree'})
+         end
+    },
 }

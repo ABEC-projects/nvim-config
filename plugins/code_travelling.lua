@@ -1,3 +1,11 @@
+local function to_exact_name(value)
+    return "^" .. value .. "$"
+end
+local Path = require("plenary.path")
+local function normalize_path(buf_name, root)
+    return Path:new(buf_name):make_relative(root)
+end
+
 return {
     {
         "nvim-neo-tree/neo-tree.nvim",
@@ -71,48 +79,109 @@ return {
             "nvim-telescope/telescope.nvim"
         },
         config = function ()
+
             local harpoon = require("harpoon")
 
             harpoon:setup({
-            --     -- Setting up custom behavior for a list named "cmd"
-            --     cmd = {
-            --
-            --         -- When you call list:add() this function is called and the return
-            --         -- value will be put in the list at the end.
-            --         --
-            --         -- which means same behavior for prepend except where in the list the
-            --         -- return value is added
-            --         --
-            --         -- @param possible_value string only passed in when you alter the ui manual
-            --         add = function(possible_value)
-            --             -- get the current line idx
-            --             local idx = vim.fn.line(".")
-            --
-            --             -- read the current line
-            --             local cmd = vim.api.nvim_buf_get_lines(0, idx - 1, idx, false)[1]
-            --             if cmd == nil then
-            --                 return nil
-            --             end
-            --
-            --             return {
-            --                 value = cmd,
-            --                 context = {vim.g.project_root},
-            --             }
-            --         end,
-            --
-            --         --- This function gets invoked with the options being passed in from
-            --         --- list:select(index, <...options...>)
-            --         --- @param list_item {value: any, context: any}
-            --         --- @param list { ... }
-            --         --- @param option any
-            --         select = function(list_item, list, option)
-            --             -- WOAH, IS THIS HTMX LEVEL XSS ATTACK??
-            --             vim.cmd(list_item.value)
-            --         end
-            --
-            --     }
+                settings = {
+                    key = function ()
+                        local root = vim.g.project_root
+                        if root == nil then
+                            root = vim.loop.cwd()
+                        end
+                        return root
+                    end
+                },
+                default = {
+
+                    create_list_item = function (config, name)
+                        name = name
+                        or normalize_path(
+                            vim.api.nvim_buf_get_name(
+                            vim.api.nvim_get_current_buf()
+                        ),
+                            config.get_root_dir()
+                        )
+
+
+                        local bufnr = vim.fn.bufnr(name, false)
+
+                        local pos = { 1, 0 }
+                        if bufnr ~= -1 then
+                            pos = vim.api.nvim_win_get_cursor(0)
+                        end
+
+                        return {
+                            value = name,
+                            context = {
+                                row = pos[1],
+                                col = pos[2],
+                                dir = vim.loop.cwd()
+                            },
+                        }
+                    end,
+
+                    select = function(list_item, list, options)
+                        if list_item == nil then
+                            return
+                        end
+
+                        options = options or {}
+
+                        local dir = list_item.context.dir
+                        if dir == nil then
+                            dir = ""
+                        end
+
+                        local bufname = dir..'/'..list_item.value
+
+
+                        local bufnr = vim.fn.bufnr(to_exact_name(bufname))
+                        local set_position = false
+                        if bufnr == -1 then -- must create a buffer!
+                            set_position = true
+                            bufnr = vim.fn.bufadd(bufname)
+                        end
+                        if not vim.api.nvim_buf_is_loaded(bufnr) then
+                            vim.fn.bufload(bufnr)
+                            vim.api.nvim_set_option_value("buflisted", true, {
+                                buf = bufnr,
+                            })
+                        end
+
+                        if options.vsplit then
+                            vim.cmd("vsplit")
+                        elseif options.split then
+                            vim.cmd("split")
+                        elseif options.tabedit then
+                            vim.cmd("tabedit")
+                        end
+
+                        vim.api.nvim_set_current_buf(bufnr)
+
+                        if set_position then
+
+                            local row = list_item.context.row
+                            local row_text =
+                                vim.api.nvim_buf_get_lines(0, row - 1, row, false)
+                            local col = #row_text[1]
+
+                            if list_item.context.col > col then
+                                list_item.context.col = col
+                            end
+
+                            vim.api.nvim_win_set_cursor(0, {
+                                list_item.context.row or 1,
+                                list_item.context.col or 0,
+                            })
+
+                        end
+
+                    end,
+                }
             })
 
+            vim.keymap.set('n', "<leader>r", function () vim.g.project_root = vim.fn.getcwd() end, {desc = "Set project root"})
             vim.keymap.set('n', "<leader>a", function () harpoon:list():add() end, {desc = "Add harpoon mark"})
             vim.keymap.set("n", "<leader>h", function () harpoon.ui:toggle_quick_menu(harpoon:list()) end, {desc = "Open harpoon list"})
             vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end, {desc = "Open harpoon mark 1"})
@@ -125,3 +194,4 @@ return {
         "nvim-treesitter/nvim-treesitter-context",
     }
 }
+
