@@ -22,7 +22,7 @@ vim.wo.relativenumber = true
 -- Required for Obsidian.nvim 
 vim.cmd("set conceallevel=2")
 
-vim.g.project_root = vim.cmd.pwd()
+
 
 
 -- Autocompletion 
@@ -128,6 +128,8 @@ lspconfig.clangd.setup{}
 lspconfig.tsserver.setup{}
 lspconfig.lua_ls.setup{}
 lspconfig.wgsl_analyzer.setup{}
+lspconfig.nil_ls.setup{}
+lspconfig.clangd.setup{}
 
 require('mason-lspconfig').setup_handlers {
 

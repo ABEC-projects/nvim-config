@@ -4,9 +4,9 @@ return {
     {
         "m4xshen/autoclose.nvim", opts = {
             keys = {
-                ["("] = { escape = false, close = true, pair = "()" },
-                ["["] = { escape = false, close = true, pair = "[]" },
-                ["{"] = { escape = false, close = true, pair = "{}" },
+                ["("] = { escape = false, close = false, pair = "()" },
+                ["["] = { escape = false, close = false, pair = "[]" },
+                ["{"] = { escape = false, close = false, pair = "{}" },
 
                 [">"] = { escape = false, close = false, pair = "<>" },
                 [")"] = { escape = false, close = false, pair = "()" },
@@ -20,10 +20,10 @@ return {
             options = {
                 disabled_filetypes = { "text" },
                 disable_when_touch = true,
-                touch_regex = '[%w(%[{]', -- }
+                touch_regex = "[%w(%[{]",
                 pair_spaces = false,
                 auto_indent = true,
-                disable_command_mode = false,
+                disable_command_mode = true,
             }
         }
     },
@@ -41,9 +41,9 @@ return {
     { "tpope/vim-surround", event = "BufEnter" },
     {
         "mbbill/undotree",
-         lazy = false,
-         config = function ()
-             vim.keymap.set('n', '<leader>ut', ':UndotreeToggle<CR>', {desc = 'Toggle undo tree'})
-         end
+        lazy = false,
+        config = function ()
+            vim.keymap.set('n', '<leader>ut', ':UndotreeToggle<CR>', {desc = 'Toggle undo tree'})
+        end
     },
 }

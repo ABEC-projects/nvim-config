@@ -18,7 +18,6 @@ wk.register({
         ["{"] = {"zfi{", "Fold {} curly brackets"},
         o = {"zo", "Unfold"}
     },
-    L = {":Lazy", "Opn Lazy"},
     f = {
         name = "Find (Telescope)",
         f = {"Find files"},
@@ -65,6 +64,9 @@ vim.keymap.set("n", "<leader>fg", function ()
         vim.cmd.cd(vim.g.project_root)
     end
     telbuiltin.live_grep()
+end, {})
+vim.keymap.set("n", "<leader>fc", function ()
+    telbuiltin.current_buffer_fuzzy_find()
 end, {})
 
 -- Yanky Settings
