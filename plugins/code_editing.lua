@@ -27,17 +27,6 @@ return {
             }
         }
     },
-    {
-        'Exafunction/codeium.nvim',
-        enabled = false,
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "hrsh7th/nvim-cmp",
-        },
-        config = function ()
-            require("codeium").setup()
-        end
-    },
     { "tpope/vim-surround", event = "BufEnter" },
     {
         "mbbill/undotree",
@@ -46,4 +35,20 @@ return {
             vim.keymap.set('n', '<leader>ut', ':UndotreeToggle<CR>', {desc = 'Toggle undo tree'})
         end
     },
+    {
+        dir = "~/Dev/nvim-lua/html-utils/",
+        name = "html-utils",
+        ft = "html",
+        config = function ()
+            require("html-utils").setup()
+        end
+    },
+    {
+        "ABEC-projects/html-utils.nvim",
+        ft = "html",
+        enabled = false,
+        config = function ()
+            require("html-utils").setup()
+        end
+    }
 }

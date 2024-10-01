@@ -125,11 +125,17 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 local lspconfig = require('lspconfig')
 lspconfig.pyright.setup{}
 lspconfig.clangd.setup{}
-lspconfig.tsserver.setup{}
+lspconfig.ts_ls.setup{}
 lspconfig.lua_ls.setup{}
 lspconfig.wgsl_analyzer.setup{}
 lspconfig.nil_ls.setup{}
 lspconfig.clangd.setup{}
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+require'lspconfig'.cssls.setup {
+  capabilities = capabilities,
+}
 
 require('mason-lspconfig').setup_handlers {
 

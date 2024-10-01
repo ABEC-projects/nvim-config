@@ -23,10 +23,6 @@ return {
                         name = "not personal",
                         path = "~/vaults/not-personal",
                     },
-                    {
-                        name = "anime",
-                        path = "~/vaults/anime"
-                    }
                 },
                 daily_notes = {
                     -- Optional, if you keep daily notes in a separate directory.

@@ -10,29 +10,29 @@ vim.g.mapleader = " "
 
 
 -- Which Key
-local wk = require("which-key")
-wk.register({
-    z = {
-        name = "Fold/unfold",
-        ["["] = {"zfi[", "Fold [] square brackets"},
-        ["{"] = {"zfi{", "Fold {} curly brackets"},
-        o = {"zo", "Unfold"}
-    },
-    f = {
-        name = "Find (Telescope)",
-        f = {"Find files"},
-        g = {"Live grep"},
-        b = {"Buffers"},
-        h = {"Help tags"}
-    },
-    e = {
-        name = "Explorer",
-    },
-    o = {
-        name = "Obsidian",
-        d = {"Dailies"}
-    }
-}, { prefix = "<leader>" })
+--flocal wk = require("which-key")
+-- wk.register({
+--     z = {
+--         name = "Fold/unfold",
+--         ["["] = {"zfi[", "Fold [] square brackets"},
+--         ["{"] = {"zfi{", "Fold {} curly brackets"},
+--         o = {"zo", "Unfold"}
+--     },
+--     f = {
+--         name = "Find (Telescope)",
+--         f = {"Find files"},
+--         g = {"Live grep"},
+--         b = {"Buffers"},
+--         h = {"Help tags"}
+--     },
+--     e = {
+--         name = "Explorer",
+--     },
+--     o = {
+--         name = "Obsidian",
+--         d = {"Dailies"}
+--     }
+-- }, { prefix = "<leader>" })
 
 
 
