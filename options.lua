@@ -115,12 +115,6 @@ vim.wo.foldmethod = 'manual'
 vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
 
 
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-  pattern = "*.wgsl",
-  callback = function()
-    vim.bo.filetype = "wgsl"
-  end,
-})
 
 local lspconfig = require('lspconfig')
 lspconfig.pyright.setup{}
@@ -128,8 +122,10 @@ lspconfig.clangd.setup{}
 lspconfig.ts_ls.setup{}
 lspconfig.lua_ls.setup{}
 lspconfig.wgsl_analyzer.setup{}
-lspconfig.nil_ls.setup{}
+-- lspconfig.nil_ls.setup{}
+lspconfig.nixd.setup{}
 lspconfig.clangd.setup{}
+lspconfig.zls.setup{}
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
