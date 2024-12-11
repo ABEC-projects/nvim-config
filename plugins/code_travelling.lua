@@ -175,6 +175,7 @@ return {
         end
     },
     {
+        enabled = false,
         "nvim-treesitter/nvim-treesitter-context",
     },
     {
