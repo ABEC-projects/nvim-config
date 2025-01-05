@@ -175,7 +175,7 @@ return {
         end
     },
     {
-        enabled = false,
+        enabled = true,
         "nvim-treesitter/nvim-treesitter-context",
         opts = {
             max_lines = 4,
