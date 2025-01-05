@@ -177,13 +177,33 @@ return {
     {
         enabled = false,
         "nvim-treesitter/nvim-treesitter-context",
+        opts = {
+            max_lines = 4,
+            trim_scope = 'inner',
+        },
     },
     {
         'smoka7/hop.nvim',
         version = "*",
-        opts = {
-            keys = 'etovxqpdygfblzhckisuran'
-        }
+        config = function()
+            require('hop').setup {
+                keys = 'etovxqpdygfblzhckisuran'
+            }
+            local hop = require('hop')
+            local directions = require('hop.hint').HintDirection
+            vim.keymap.set('n', 'hf', function()
+                hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = false })
+            end, {remap=true})
+            vim.keymap.set('n', 'hF', function()
+                hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = false })
+            end, {remap=true})
+            vim.keymap.set('n', 'ht', function()
+                hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = false, hint_offset = -1 })
+            end, {remap=true})
+            vim.keymap.set('n', 'hT', function()
+                hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = false, hint_offset = 1 })
+            end, {remap=true})
+        end
     }
 }
 
