@@ -26,6 +26,21 @@ return {
                 flags = {},
                 filetypes = {'gd', 'gdscript', 'gdscript3'}
             }
+            lspconfig.nixd.setup{
+                cmd = { "nixd" },
+                settings = {
+                    nixd = {
+                        nixpkgs = {
+                            expr = "import <nixpkgs> {}",
+                        },
+                        options = {
+                            nixos_config = {
+                                expr = '(builtins.getFlake ("/etc/nixos")).nixosConfigurations.default.options',
+                            },
+                        },
+                    },
+                },
+            }
         end
     },
     -- Lsp-related

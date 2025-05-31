@@ -36,6 +36,7 @@ return {
         end
     },
     {
+        enabled = false,
         dir = "~/Dev/nvim-lua/html-utils/",
         name = "html-utils",
         ft = "html",

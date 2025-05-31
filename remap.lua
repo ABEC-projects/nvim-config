@@ -106,6 +106,8 @@ opts.desc = "Lsp Rename"
 vim.api.nvim_set_keymap("n", "<leader>ln", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 opts.desc = "Lsp References"
 vim.api.nvim_set_keymap("n", "<leader>lr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+opts.desc = "Lsp Format Buf"
+vim.api.nvim_set_keymap("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format()<CR>", opts)
 -- vim.api.nvim_set_keymap("n", "<leader>f", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
 -- vim.api.nvim_set_keymap("n", "[d", '<cmd>lua vim.diagnostic.goto_prev({ border = "single" })<CR>', opts)
 -- vim.api.nvim_set_keymap("n", "]d", '<cmd>lua vim.diagnostic.goto_next({ border = "single" })<CR>', opts)

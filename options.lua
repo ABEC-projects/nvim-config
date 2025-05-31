@@ -123,8 +123,6 @@ lspconfig.ts_ls.setup{}
 lspconfig.tsserver.setup{}
 lspconfig.lua_ls.setup{}
 lspconfig.wgsl_analyzer.setup{}
--- lspconfig.nil_ls.setup{}
-lspconfig.nixd.setup{}
 lspconfig.clangd.setup{}
 lspconfig.zls.setup{}
 
