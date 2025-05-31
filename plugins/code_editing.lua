@@ -40,6 +40,7 @@ return {
         dir = "~/Dev/nvim-lua/html-utils/",
         name = "html-utils",
         ft = "html",
+        enabled = false,
         config = function ()
             require("html-utils").setup()
         end

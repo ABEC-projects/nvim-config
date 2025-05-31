@@ -120,7 +120,6 @@ local lspconfig = require('lspconfig')
 lspconfig.pyright.setup{}
 lspconfig.clangd.setup{}
 lspconfig.ts_ls.setup{}
-lspconfig.tsserver.setup{}
 lspconfig.lua_ls.setup{}
 lspconfig.wgsl_analyzer.setup{}
 lspconfig.clangd.setup{}
